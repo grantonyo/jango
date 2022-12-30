@@ -1,0 +1,215 @@
+# БЛОК 1. КОМАНДЫ, КОТОРЫЕ ВЫПОЛНЯЛИСЬ ДЛЯ ПРОВЕРКИ КОРРЕКТНОСТИ РАОБТЫ КОДА ПРИ ЕГО НАПИСАНИИ (ЧАСТИНО ПОКРЫВАЮТ П.1-11 ПО РАБОТЕ В КОНСОЛИ DJANGO)
+
+sh-5.1$ cd ..
+sh-5.1$ source jvenv/bin/activate
+(jvenv) sh-5.1$ ls
+InternetShop  jproject  jvenv  models_tutor  NewsPaper
+(jvenv) sh-5.1$ cd NewsPaper
+(jvenv) sh-5.1$ ls
+db.sqlite3  manage.py  news  NewsPaper
+(jvenv) sh-5.1$ python manage.py shell
+Python 3.10.6 (main, Nov 10 2011, 15:00:00) [GCC 12.1.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from news.models import *
+>>> u1 = User.objects.create_user(username="Anton")
+>>> u1
+<User: Anton>
+>>> u2 = User.objects.create_user(username="Tim")
+>>> a1 = Author.objects.create(authorUser=u1)
+>>> a1
+<Author: Author object (1)>
+>>> c1 = Category.objects.create(name='IT')
+>>> c1
+<Category: Category object (1)>
+>>> a1
+<Author: Author object (1)>
+>>> Post.objects.create(author=a1, categoryType='NW', title="sometitle", text='some big text')
+<Post: Post object (1)>
+>>> Post.objects.get(id=1)
+<Post: Post object (1)>
+>>> Post.objects.get(id=1).title
+'sometitle'
+>>> Post.objects.get(id=1).text
+'some big text'
+>>> Post.objects.get(id=1).categoryType
+'NW'
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=1)
+... )
+>>> Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=1).authorUser, text = 'some comment'
+... )
+<Comment: Comment object (1)>
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=1).rating
+1
+>>> Comment.objects.get(id=1).dislike()
+>>> Comment.objects.get(id=1).dislike()
+>>> Comment.objects.get(id=1).dislike()
+>>> Comment.objects.get(id=1).rating
+-2
+>>> Author.objects.get(id=1)
+<Author: Author object (1)>
+>>> a1
+<Author: Author object (1)>
+>>> a.update_rating()
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'a' is not defined
+>>> a1.update_rating()
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "/home/grant/gdev/jango/NewsPaper/news/models.py", line 26, in update_rating
+    commentRat = self.authorUser.comment_set.aggegate(commentRating=Sum('rating'))
+AttributeError: 'RelatedManager' object has no attribute 'aggegate'
+>>> from news.models import *
+>>> a1.update_rating()
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "/home/grant/gdev/jango/NewsPaper/news/models.py", line 26, in update_rating
+    commentRat = self.authorUser.comment_set.aggregate(commentRating=Sum('rating'))
+AttributeError: 'RelatedManager' object has no attribute 'aggegate'
+>>> 
+KeyboardInterrupt
+>>> quit()
+(jvenv) sh-5.1$ python manage.py shell
+Python 3.10.6 (main, Nov 10 2011, 15:00:00) [GCC 12.1.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> a = Author.objects.get(id=1)
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'Author' is not defined
+>>> from news.model import *
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+ModuleNotFoundError: No module named 'news.model'
+>>> from news.models import *
+>>> a = Author.objects.get(id=1)
+>>> a
+<Author: Author object (1)>
+>>> a.update_rating()
+>>> a.ratingAuthor
+-2
+>>> Post.objects.get(id=1).like()
+>>> a.update_rating()
+>>> a.ratingAuthor
+1
+>>> a = Author.objects.order_by('-ratingAuthor')[:1]
+>>> a
+<QuerySet [<Author: Author object (1)>]>
+>>> c = User.objects.create_user(username='Sn')
+>>> c
+<User: Sn>
+>>> Author.objects.create(authorUser=c)
+<Author: Author object (2)>
+>>> a = Author.objects.order_by('-ratingAuthor')[:1]
+>>> a
+<QuerySet [<Author: Author object (1)>]>
+>>> a = Author.objects.order_by('-ratingAuthor')
+>>> a
+<QuerySet [<Author: Author object (1)>, <Author: Author object (2)>]>
+>>> for i in a:
+...     i.ratingAuthor
+...     i.authorUser.username
+... 
+1
+'Anton'
+0
+'Sn'
+>>> 
+
+--------------------------------------------------------------
+# БЛОК 2. КОМАНДЫ, КОТОРЫЕ ВЫПОЛНЯЛИСЬ ДЛЯ ВЫПОЛНЕНИЯ П.1-11 ЗАДАНИЯ ПО РАБОТЕ В КОНСОЛИ DJANGO (В ТОЙ МЕРЕ, В КОТОРОЙ ОНИ НЕ ПОКРЫТЫ БЛОКОМ 1)
+sh-5.1$ cd ..
+sh-5.1$ source jvenv/bin/activate
+(jvenv) sh-5.1$ cd NewsPaper
+(jvenv) sh-5.1$ ls
+ db.sqlite3   manage.py   news   NewsPaper  'Shell commands log file'
+(jvenv) sh-5.1$ python manage.py shell
+Python 3.10.6 (main, Nov 10 2011, 15:00:00) [GCC 12.1.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> a = Author.objects.create(authorUser=User.objects.get(id=2))
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'Author' is not defined
+>>> from NewsPaper.models import *
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+ModuleNotFoundError: No module named 'NewsPaper.models'
+>>> from news.models import *
+>>> a = Author.objects.create(authorUser=User.objects.get(id=2))
+>>> cat1=Category.objects.crate(name="Наука")
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'Manager' object has no attribute 'crate'
+>>> cat1=Category.objects.create(name="Наука")
+>>> cat2=Category.objects.create(name="Техника")
+>>> cat3=Category.objects.create(name="Разное")
+>>> p1 = Post.objects.create(author=Author.objects.get(id=2), categoryType="AR", title="Введение в Python", text="Python - это язык программирования, который широко используется в интернет-приложениях, разработке программного обеспечения, науке о данных и машинном обучении (ML).")
+>>> p1 = Post.objects.create(author=Author.objects.get(id=2), categoryType="AR", title="Открытия в астрономии в2022", text="В 2022 году астрономы открыли ...")
+>>> pc1 = PostCategory.objects.create(postThrough=Post.objects.get(id=1), categoryThrough=Category.objects.get(name="Разное"))
+>>> pc2 = PostCategory.objects.create(postThrough=Post.objects.get(id=1), categoryThrough=Category.objects.get(id=3))
+>>> pc3 = PostCategory.objects.create(postThrough=Post.objects.get(id=2), categoryThrough=Category.objects.get(id=1))
+>>> pc4 = PostCategory.objects.create(postThrough=Post.objects.get(id=3), categoryThrough=Category.objects.get(id=2))
+>>> com1 = Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=User.objects.get(id=2), text="Какая-то непонятная новость")
+>>> com2 = Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=User.objects.get(id=3), text="Что это было?")
+>>> com3 = Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=User.objects.get(id=1), text="Очень интересно!")
+>>> com4 = Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=User.objects.get(id=1), text="Занимательно")
+>>> com5 = Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=User.objects.get(id=3), text="Мне понравилась эта статья!")
+>>> Post.objects.get(id=1).dislike()
+>>> Post.objects.get(id=2).like()
+>>> Post.objects.get(id=3).like()
+>>> Post.objects.get(id=3).like()
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=3).like()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=5).like()
+>>> Comment.objects.get(id=6).like()
+>>> Comment.objects.get(id=4).like()
+>>> a1 = Author.objects.get(id=1)
+>>> a1
+<Author: Author object (1)>
+>>> a1.update_rating()
+>>> a1.ratingAuthor
+1
+>>> a2 = Author.objects.get(id=2)
+>>> a2
+<Author: Author object (2)>
+>>> a2.update_rating()
+>>> a2.ratingAuthor
+11
+>>> a3 = Author.objects.get(id=3)
+>>> a3
+<Author: Author object (3)>
+>>> 
+>>> a = Author.objects.order_by('-ratingAuthor')[0]
+>>> f'Имя лучшего пользователя: {a.ratingAuthor}, рейтинг лучшего пользователя {a.authorUser.username}'
+'Имя лучшего пользователя: 11, рейтинг лучшего пользователя Sn'
+>>> Post.objects.all().order_by('rating')
+<QuerySet [<Post: Post object (1)>, <Post: Post object (2)>, <Post: Post object (3)>]>
+>>> Post.objects.all().order_by('-rating')
+<QuerySet [<Post: Post object (3)>, <Post: Post object (2)>, <Post: Post object (1)>]>
+>>> Post.objects.all().order_by('-rating')[0]
+<Post: Post object (3)>
+>>> p = Post.objects.all().order_by('-rating')[0]
+>>> f'Дата добавления лучшей статьи: {p.dateCreation}'
+'Дата добавления лучшей статьи: 2022-12-29 21:57:49.843676+00:00'
+>>> f'Имя автора лучшей статьи: {p.author.authorUser.username}'
+'Имя автора лучшей статьи: Sn'
+>>> f'Рейтинг лучшей статьи: {p.rating}'
+'Рейтинг лучшей статьи: 2'
+>>> f'Заголовок  лучшей статьи: {p.title}'
+'Заголовок  лучшей статьи: Открытия в астрономии в2022'
+>>> f"Превью лучшей статьи: {p.preview()}"
+'Превью лучшей статьи: В 202...'
+>>> Comment.objects.filter(commentPost=p)
+<QuerySet [<Comment: Comment object (5)>, <Comment: Comment object (6)>]>
+>>> Comment.objects.filter(commentPost=p).values('dateCreation', 'commentUser', 'rating', 'text')
+<QuerySet [{'dateCreation': datetime.datetime(2022, 12, 29, 22, 20, 0, 662289, tzinfo=datetime.timezone.utc), 'commentUser': 1, 'rating': 1, 'text': 'Занимательно'}, {'dateCreation': datetime.datetime(2022, 12, 29, 22, 20, 57, 482139, tzinfo=datetime.timezone.utc), 'commentUser': 3, 'rating': 1, 'text': 'Мне понравилась эта статья!'}]>
+>>> Comment.objects.filter(commentPost=p).values('dateCreation(date)', 'commentUser', 'rating', 'text')
+
+--------------------------------------------------------------------------------------
+
+
+# 
