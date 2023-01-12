@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
 
+
 # Модель Author
 # Модель, содержащая объекты всех авторов.
 # Имеет следующие поля:
@@ -17,6 +18,10 @@ from django.db.models import Sum
 class Author(models.Model):
     authorUser = models.OneToOneField(User, on_delete=models.CASCADE)
     ratingAuthor = models.SmallIntegerField(default=0)
+
+    def __str__(self):
+        return self.authorUser.username
+
 
     def update_rating(self):
         postRat = self.post_set.aggregate(postRating=Sum('rating'))
@@ -44,6 +49,9 @@ class Author(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True)
 
+    def __str__(self):
+        return self.name.title()
+
 
 # Модель Post
 # Эта модель должна содержать в себе статьи и новости, которые создают пользователи.
@@ -60,21 +68,25 @@ class Category(models.Model):
 # Методы like() и dislike() в моделях Comment и Post, которые увеличивают/уменьшают рейтинг на единицу.
 # Метод preview() модели Post, который возвращает начало статьи (предварительный просмотр) длиной 124 символа и добавляет многоточие в конце.
 
+
+NEWS = "NW"
+ARTICLE = 'AR'
+CATEGORY_CHOICES = (
+    (NEWS, 'Новость'),
+    (ARTICLE, 'Статья'),
+)
+
 class Post(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    NEWS = "NW"
-    ARTICLE = 'AR'
-    CATEGORY_CHOICES = (
-        (NEWS, 'Новость'),
-        (ARTICLE, 'Статья'),
-    )
-
     categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
     dateCreation = models.DateTimeField(auto_now_add=True)
     postCategory = models.ManyToManyField(Category, through='PostCategory')
     title = models.CharField(max_length=128)
     text = models.TextField()
     rating = models.SmallIntegerField(default=0)
+
+    def __str__(self):
+        return f'ID: {self.id} | {self.title}'
 
     def like(self):
         self.rating +=1
@@ -85,7 +97,8 @@ class Post(models.Model):
         self.save()
 
     def preview(self):
-        return self.text[0:5]+'...'
+        return self.text[0:20]+'...'
+
 
 
 # Модель PostCategory
@@ -96,6 +109,8 @@ class PostCategory(models.Model):
     postThrough = models.ForeignKey(Post, on_delete=models.CASCADE)
     categoryThrough = models.ForeignKey(Category, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'ID:{self.postThrough.id} | {self.categoryThrough.name}'
 
 # Модель Comment
 # Под каждой новостью/статьёй можно оставлять комментарии, поэтому необходимо организовать их способ хранения тоже.
@@ -116,6 +131,8 @@ class Comment(models.Model):
     dateCreation = models.DateTimeField(auto_now_add=True)
     rating = models.SmallIntegerField(default=0)
 
+    def __str__(self):
+        return f'[ID статьи: {self.commentPost.id}] {self.commentUser.username}: {self.text[:100]}'
 
     def like(self):
         self.rating +=1
@@ -124,8 +141,4 @@ class Comment(models.Model):
     def dislike(self):
         self.rating -= 1
         self.save()
-
-
-
-
 
