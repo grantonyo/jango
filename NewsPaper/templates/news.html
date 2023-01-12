@@ -1,0 +1,40 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+Products
+{% endblock title %}
+
+{% block content %}
+   <h1>Список новостей и статей</h1>
+
+    Количество новостей и статей: {{ posts|length }}
+
+   <hr>
+   {% if posts %}
+       <table> <!-- Начинаем описывать таблицу -->
+           <tr> <!-- Добавляем строку -->
+               <td> <b>Автор</b> </td>
+               <td> <b>Заголовок</b> </td>
+               <td> <b>Дата</b> </td>
+               <td> <b>Превью</b> </td>
+           </tr> <!-- Не забываем закрыть HTML-тег строки -->
+
+           {% for a in posts %}
+            <tr>
+                <td align="left">{{ a.author }}</td>
+                <td align="left">{{ a.title|censor }}</td>
+                <td align="left">{{ a.dateCreation|date:'d M Y'}}</td>
+                <td align="left">{{ a.text|truncatewords:20|censor }}</td>
+           </tr>
+           {% endfor %}
+
+
+       </table> <!-- ... и таблицы -->
+
+   {% else %}
+       <h2>Новостей нет!</h2>
+
+   {% endif %}
+{% endblock content %}
+
